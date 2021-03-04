@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: docker
 
 on:
   push:
@@ -19,8 +19,8 @@ jobs:
       uses: jimschubert/query-tag-action@v2
       with:
         include: 'v*'
-        commit-ish: 'HEAD~'
-        abbrev: 7
+        commit-ish: 'HEAD'
+        abbrev: false
 
     - name: Show Tag
       id: display
