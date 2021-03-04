@@ -8,8 +8,12 @@ import (
 )
 
 func main() {
-	m, _ := message.NewMessenger(os.Getenv("ENV"))
-
+	env := os.Getenv("ENV")
+	if env == "" {
+		env = "not set"
+	}
+	m, _ := message.NewMessenger(env)
+	log.Printf("Starting for Env: %s", env)
 	http.HandleFunc("/", m.MessageHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
