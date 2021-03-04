@@ -1,9 +1,12 @@
-FROM golang:1.16
-RUN go get -d -v golang.org/x/net/html
-COPY * .
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o app .
+FROM golang:1.16-alpine AS build
 
-FROM alpine:latest
-RUN apk --no-cache add ca-certificates
-COPY --from=0 /go/src/github.com/alexellis/href-counter/app .
-CMD ["./app"]
+WORKDIR /src/
+COPY . /src/
+RUN CGO_ENABLED=0 go build -o /bin/medea ./cmd/medea
+
+FROM scratch
+COPY --from=build /bin/medea /bin/medea
+
+EXPOSE 8080
+ENV env=dockerfile
+ENTRYPOINT ["/bin/medea"]
