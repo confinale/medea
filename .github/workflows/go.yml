@@ -1,7 +1,7 @@
 name: go
 
 on:
-  create
+  create:
   push:
     branches: [ main ]
   pull_request:
