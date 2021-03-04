@@ -20,7 +20,7 @@ jobs:
       with:
         include: 'v*'
         commit-ish: 'HEAD~'
-        abbrev: false
+        abbrev: 7
 
     - name: Show Tag
       id: display
