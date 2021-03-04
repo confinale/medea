@@ -14,6 +14,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Find Tag
+      id: tagger
+      uses: jimschubert/query-tag-action@v1
+      with:
+        include: 'v*'
+        commit-ish: 'HEAD~'
+
+    - name: Show Tag
+      id: display
+      run: |
+        echo 'Output from Find Tag: ${{steps.tagger.outputs.tag}}'
     -
       name: Set up QEMU
       uses: docker/setup-qemu-action@v1
@@ -26,13 +37,14 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+
     -
       name: Build and push
       id: docker_build
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: confinale/medea:{{git describe --tags}}
+        tags: confinale/medea:${{steps.tagger.outputs.tag}}
     -
       name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
