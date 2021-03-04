@@ -1,6 +1,7 @@
 name: Go
 
 on:
+  create
   push:
     branches: [ main ]
   pull_request:

@@ -1,6 +1,6 @@
 name: Test Across Matrix
 
-on: push
+on: [push,create]
 
 jobs:
   test:
