@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  get-tag:
+  autodeploy:
 
     runs-on: ubuntu-latest
 
@@ -27,24 +27,24 @@ jobs:
         echo 'Output from Find Tag: ${{steps.tagger.outputs.tag}}'
 
 
-  deploy:
-
-    runs-on: ubuntu-latest
-    needs: 'get-tag'
-
-    steps:
     - uses: actions/checkout@v2
       with:
         repository: confinale/medea-config
-        token: ${{ secrets.ACCESS_TOKEN }}
         ssh-key: '${{ secrets.MEDEA_CONFIG_SSH_KEY }}'
         ref: 'development'
+        path: 'medea-config'
+
     - uses: imranismail/setup-kustomize@v1
       with:
         kustomize-version: "4.0.4"
 
     - run: kustomize edit set image confinale/medea:${{steps.tagger.outputs.tag}}
-      working-directory: 'base'
-    - run: git add .
-    - run: git commit -m "Set `confinale/medea` image tag to `${{steps.tagger.outputs.tag}}`"
-    - run: git push  
+      working-directory: 'medea-config/base'
+
+    - run: | 
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Set `confinale/medea` image tag to `${{steps.tagger.outputs.tag}}`"
+          git push  
+      working-directory: 'medea-config'
