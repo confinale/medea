@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	env := os.Getenv("ENV")
+	env := os.Getenv("ENV_NAME")
 	if env == "" {
 		env = "not set"
 	}
