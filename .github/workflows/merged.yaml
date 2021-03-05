@@ -76,7 +76,7 @@ jobs:
 
   
   autodeploy:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'release' && github.event.action == 'created')
 
     runs-on: ubuntu-latest
     needs: [docker,tagger]
@@ -100,6 +100,7 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m "Set `confinale/medea` image tag to `${{needs.tagger.outputs.tag}}`"
+          git commit -m "Set confinale/medea image tag to ${{needs.tagger.outputs.tag}}"
           git push  
       working-directory: 'medea-config'
+      name: 'update docker image to ${{needs.tagger.outputs.tag}}'
