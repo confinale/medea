@@ -31,7 +31,7 @@ jobs:
       with:
         repository: confinale/medea-config
         ssh-key: '${{ secrets.MEDEA_CONFIG_SSH_KEY }}'
-        ref: 'development'
+        ref: 'develop'
         path: 'medea-config'
 
     - uses: imranismail/setup-kustomize@v1
