@@ -8,5 +8,4 @@ FROM scratch
 COPY --from=build /bin/medea /bin/medea
 
 EXPOSE 8080
-ENV ENV_NAME=dockerfile
 ENTRYPOINT ["/bin/medea"]
