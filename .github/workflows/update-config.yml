@@ -1,0 +1,47 @@
+name: update deployment config
+
+on:
+  create:
+  push:
+    branches: [ autodeploy ]
+
+jobs:
+
+  get-tag:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Find Tag
+      id: tagger
+      uses: jimschubert/query-tag-action@v2
+      with:
+        include: 'v*'
+        commit-ish: 'HEAD'
+        abbrev: false
+
+    - name: Show Tag
+      id: display
+      run: |
+        echo 'Output from Find Tag: ${{steps.tagger.outputs.tag}}'
+
+
+    - uses: actions/checkout@v2
+      with:
+        repository: confinale/medea-config
+        #token: ${{ secrets.ACCESS_TOKEN }}
+        path: '../medea-config'
+        ref: 'development'
+    - uses: imranismail/setup-kustomize@v1
+      with:
+        kustomize-version: "4.0.4"
+
+    - run: kustomize edit set image confinale/medea:${{steps.tagger.outputs.tag}}
+      working-directory: '../medea-config/base'
+    - run: git add .
+      working-directory: '../medea-config'
+    - run: git commit -m "Set `confinale/medea` image tag to `${{steps.tagger.outputs.tag}}`"
+      working-directory: '../medea-config'
+    - run: git push  
+      working-directory: '../medea-config'
