@@ -37,17 +37,13 @@ jobs:
       with:
         repository: confinale/medea-config
         #token: ${{ secrets.ACCESS_TOKEN }}
-        path: '../medea-config'
         ref: 'development'
     - uses: imranismail/setup-kustomize@v1
       with:
         kustomize-version: "4.0.4"
 
     - run: kustomize edit set image confinale/medea:${{steps.tagger.outputs.tag}}
-      working-directory: '../medea-config/base'
+      working-directory: 'base'
     - run: git add .
-      working-directory: '../medea-config'
     - run: git commit -m "Set `confinale/medea` image tag to `${{steps.tagger.outputs.tag}}`"
-      working-directory: '../medea-config'
     - run: git push  
-      working-directory: '../medea-config'
