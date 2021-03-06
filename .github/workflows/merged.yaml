@@ -1,7 +1,8 @@
 name: default
 
 on:
-  create:
+  release:
+    types: [created]
   push:
     branches: [ main ]
   pull_request:
@@ -69,6 +70,7 @@ jobs:
       with:
         push: true
         tags: confinale/medea:${{needs.tagger.outputs.tag}}
+        build-args: VERSION=${{needs.tagger.outputs.tag}}
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
 

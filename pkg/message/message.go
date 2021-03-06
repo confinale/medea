@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"net/http"
 	"time"
+
+	"github.com/confinale/medea/pkg/version"
 )
 
 //go:embed message.html
@@ -30,14 +32,16 @@ func NewMessenger(env string) (*Messenger, error) {
 }
 
 type templateVal struct {
-	Env    string
-	Uptime string
+	Env     string
+	Uptime  string
+	Version string
 }
 
 func (m *Messenger) MessageHandler(w http.ResponseWriter, _ *http.Request) {
 	val := templateVal{
-		Env:    m.env,
-		Uptime: NiceUptime(m.start, time.Now()),
+		Env:     m.env,
+		Uptime:  NiceUptime(m.start, time.Now()),
+		Version: version.Version,
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	err := m.templ.Execute(w, val)
