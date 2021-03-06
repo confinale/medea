@@ -69,6 +69,7 @@ jobs:
       with:
         push: true
         tags: confinale/medea:${{needs.tagger.outputs.tag}}
+        build-args: VERSION=${{needs.tagger.outputs.tag}}
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
 
