@@ -15,7 +15,7 @@ func main() {
 		env = "not set"
 	}
 	m, _ := message.NewMessenger(env)
-	log.Printf("Starting Medea [%s] for Env: %s", version.Version, env)
+	log.Printf("Starting Medea [%s] for env: %s", version.Version, env)
 	http.HandleFunc("/", m.MessageHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
